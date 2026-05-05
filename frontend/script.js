@@ -138,8 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resultPanel.style.display = 'none'; // Hide old results
     }
 
-    // placeholder API endpoint config designed for simple replacement
-    const API_ENDPOINT = '/api/predict'; 
+    // UPDATE THIS URL: Replace the placeholder below with your actual Hugging Face Space URL.
+    // Ensure you keep the `/api/predict` at the end.
+    // Example: const API_ENDPOINT = 'https://username-spacename.hf.space/api/predict';
+    const API_ENDPOINT = 'https://swastik1333-florai-plant-detection.hf.space/api/predict';
     
     // Global variable to cache location so we only ask for permission ONCE
     let globalLat = null;
@@ -233,8 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('region', globalRegion);
         }
         
-        // Pointing to local FastAPI server (now using relative path to support both local and remote)
-        fetch('/api/predict', {
+        // Pointing to the absolute Hugging Face backend API endpoint
+        fetch(API_ENDPOINT, {
             method: 'POST',
             body: formData
         })
