@@ -41,7 +41,7 @@ def get_gemini_advisory(disease_name, in_india=False, region_name=None):
     if not api_key: return None
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         prompt = f"You are an expert botanist and agricultural advisor. A farmer has detected '{disease_name}' in their crop."
         if region_name and "Unknown" not in region_name:
             prompt += f" The farm is located in this geographic region: {region_name}. Deduce the dominant native agricultural soil type for this region and customize your advice based on how that specific soil interacts with the disease."
@@ -60,7 +60,7 @@ def get_gemini_vision_advisory(pil_img, region_name=None):
     if not api_key: return None
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         prompt = "Analyze this image. Identify the exact plant species and definitively diagnose any visible diseases or nutritional deficiencies. Then, prescribe a clear, practical 3-sentence recommendation."
         if region_name and "Unknown" not in region_name:
             prompt += f" Context: The plant is growing in {region_name}. Integrate the region's typical native soil properties (e.g., pH, clay/sand density) into your diagnosis and cure."
