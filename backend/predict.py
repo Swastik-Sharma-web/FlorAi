@@ -88,22 +88,25 @@ def load_prediction_model():
 
 def load_class_names():
     """
-    Dynamically load class names from the dataset directory structure.
-    ImageDataGenerator sorts classes alphanumerically by default.
+    Dynamically load class names.
+    Since datasets are not deployed, we hardcode the 38 PlantVillage classes.
     """
     global CLASS_NAMES
     if CLASS_NAMES is None:
-        # Assuming PlantVillage is the base training corpus for classes
-        train_dir = DATASETS_DIR / "PlantVillage" / "plantvillage dataset" / "color"
-        if train_dir.exists():
-            # Get sorted subdirectories just like flow_from_directory does
-            classes = sorted([d.name for d in train_dir.iterdir() if d.is_dir()])
-            CLASS_NAMES = classes
-        else:
-            # Fallback for when datasets aren't present locally yet 
-            # (matches standard mock names from previous step)
-            CLASS_NAMES = ["Early Blight", "Healthy", "Late Blight", "Leaf Spot", "Powdery Mildew"]
-            print("Warning: Training Dataset dir not found. Using default CLASS_NAMES list.")
+        CLASS_NAMES = [
+            'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy', 
+            'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew', 'Cherry_(including_sour)___healthy', 
+            'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot', 'Corn_(maize)___Common_rust_', 
+            'Corn_(maize)___Northern_Leaf_Blight', 'Corn_(maize)___healthy', 'Grape___Black_rot', 
+            'Grape___Esca_(Black_Measles)', 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 'Grape___healthy', 
+            'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot', 'Peach___healthy', 
+            'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy', 'Potato___Early_blight', 
+            'Potato___Late_blight', 'Potato___healthy', 'Raspberry___healthy', 'Soybean___healthy', 
+            'Squash___Powdery_mildew', 'Strawberry___Leaf_scorch', 'Strawberry___healthy', 
+            'Tomato___Bacterial_spot', 'Tomato___Early_blight', 'Tomato___Late_blight', 'Tomato___Leaf_Mold', 
+            'Tomato___Septoria_leaf_spot', 'Tomato___Spider_mites Two-spotted_spider_mite', 'Tomato___Target_Spot', 
+            'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus', 'Tomato___healthy'
+        ]
     return CLASS_NAMES
 
 def is_leaf_detected(image_file):
