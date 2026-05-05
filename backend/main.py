@@ -11,9 +11,12 @@ sys.path.append(str(BASE_DIR))
 
 # Import the prediction module we just built
 try:
-    from training.predict import predict_disease
+    from predict import predict_disease
 except ImportError:
-    print("Warning: Could not import predict_disease. Make sure the file exists.")
+    try:
+        from backend.predict import predict_disease
+    except ImportError:
+        print("Warning: Could not import predict_disease. Make sure the file exists.")
     
 app = FastAPI(title="AI-Powered Plant Disease Detection API")
 
