@@ -37,6 +37,10 @@ class PredictionResponse(BaseModel):
 
 
 
+@app.get("/api/test")
+def test_deploy():
+    return {"status": "NEW CODE DEPLOYED", "commit": "test3"}
+
 @app.post("/api/predict", response_model=PredictionResponse)
 async def api_predict_plant_disease(
     file: UploadFile = File(...),
