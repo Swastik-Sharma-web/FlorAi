@@ -57,9 +57,14 @@ async def api_predict_plant_disease(
         # and formats the output into a dictionary perfectly matching our PredictionResponse model.
         result_dict = predict_disease(image_stream, latitude=latitude, longitude=longitude, region=region)
         
-        # Remove extra keys not expected by the Pydantic API response model
+        # Temporarily expose the exact error in the suggestion field for debugging
         if "error" in result_dict:
-            del result_dict["error"]
+            return PredictionResponse(
+                disease="DEBUG ERROR",
+                confidence=0.0,
+                health_status="Error",
+                suggestion=str(result_dict["error"])
+            )
             
         return PredictionResponse(**result_dict)
         
