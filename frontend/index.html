@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlorAI - Plant Disease Detection</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Mesh Gradient effect -->
+    <div class="bg-mesh"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-leaf"></i> FlorAI
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#workflow">How it Works</a></li>
+                <li><a href="#detection">AI Detection</a></li>
+                <li><a href="#tech">Technologies</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>AI-Powered Plant Disease Detection</h1>
+                <p class="hero-subtitle">An intelligent system that detects plant diseases using deep learning and computer vision. Protect your crops with real-time, accurate diagnostics.</p>
+                <div class="hero-buttons">
+                    <a href="#detection" class="btn btn-primary">
+                        <i class="fa-solid fa-upload"></i> Upload Leaf Image
+                    </a>
+                    <a href="#about" class="btn btn-secondary">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2>About the Project</h2>
+            <div class="about-grid">
+                <div class="about-text glass-card">
+                    <p>This project develops a plant-agnostic intelligent system that detects plant diseases from leaf images using advanced deep learning and Convolutional Neural Network (CNN) models.</p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <i class="fa-solid fa-sun plant-icon"></i>
+                            <span>Works in real field conditions with varying lighting</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fa-solid fa-microchip plant-icon"></i>
+                            <span>Uses cutting-edge AI and computer vision</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fa-solid fa-seedling plant-icon"></i>
+                            <span>Helps farmers and researchers detect plant health instantly</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <!-- Placeholder div styling to act as an image -->
+                    <div style="background: linear-gradient(135deg, var(--light-green), var(--secondary-green)); height: 400px; border-radius: 24px; box-shadow: var(--glass-shadow); display: flex; align-items: center; justify-content: center; transform: rotate(2deg); transition: transform 0.3s ease;" onmouseover="this.style.transform='rotate(0deg) scale(1.02)'" onmouseout="this.style.transform='rotate(2deg)'">
+                        <i class="fa-solid fa-microscope" style="font-size: 8rem; color: white; opacity: 0.8;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow">
+        <div class="container">
+            <h2>How the System Works</h2>
+            <div class="workflow-grid">
+                <div class="workflow-item">
+                    <div class="workflow-icon"><i class="fa-regular fa-image"></i></div>
+                    <h3>Upload Image</h3>
+                    <p>Submit a clear photo of the target plant leaf.</p>
+                </div>
+                <div class="workflow-item">
+                    <div class="workflow-icon"><i class="fa-solid fa-crop-simple"></i></div>
+                    <h3>Preprocessing</h3>
+                    <p>Image segmentation isolates the leaf from the background.</p>
+                </div>
+                <div class="workflow-item">
+                    <div class="workflow-icon"><i class="fa-solid fa-brain"></i></div>
+                    <h3>Feature Extraction</h3>
+                    <p>CNN models analyze intricate patterns and anomalies.</p>
+                </div>
+                <div class="workflow-item">
+                    <div class="workflow-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3>Classification</h3>
+                    <p>Generates prediction with confidence score & advice.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Upload & AI Detection Section -->
+    <section id="detection" style="background: var(--pale-green);">
+        <div class="container">
+            <h2>AI Detection Dashboard</h2>
+            <div class="detection-container glass-card">
+                
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <h3 class="upload-text">Drag & Drop Leaf Image</h3>
+                    <p class="upload-subtext">or click to browse files (JPG, PNG)</p>
+                    <input type="file" id="fileInput" accept="image/*">
+                    
+                    <div class="preview-container" id="previewContainer">
+                        <img src="" id="previewImage" class="preview-image" alt="Leaf preview">
+                    </div>
+                    
+                    <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="document.getElementById('fileInput').click(); event.stopPropagation();">
+                        Browse Files
+                    </button>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="loading-spinner" id="loadingSpinner"></div>
+
+                <!-- Result Panel -->
+                <div class="result-panel" id="resultPanel">
+                    <div class="result-header">
+                        <h3>Analysis Complete</h3>
+                        <span class="status-badge" id="resStatusText">Status</span>
+                    </div>
+                    
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Detected Disease</div>
+                            <div class="detail-value" id="resDisease">---</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Confidence Score</div>
+                            <div class="detail-value" id="resConfidence">0%</div>
+                            <div class="confidence-bar-container">
+                                <div class="confidence-bar" id="resConfidenceBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="advisory-box">
+                        <h4><i class="fa-solid fa-user-doctor"></i> Suggested Treatment Advice</h4>
+                        <p id="resAdvice">---</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Weather Forecast & Supported Crops Section -->
+    <section id="dashboard-extras" style="padding-top: 0; background: var(--pale-green);">
+        <div class="container">
+            <div class="extras-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; align-items: stretch;">
+                
+                <!-- Supported Crops Slider -->
+                <div class="glass-card" style="padding: 2rem; overflow: hidden; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-seedling"></i> Supported Crops</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.95rem;">Our AI model is trained to recognize diseases across a variety of important agricultural and horticultural crops.</p>
+                    <div class="crops-slider-container" style="position: relative; width: 100%; overflow: hidden; padding: 1rem 0; border-radius: 12px; background: rgba(255,255,255,0.3);">
+                        <div class="crops-track" style="display: flex; gap: 1rem; width: max-content; animation: slideCrops 20s linear infinite;">
+                            <!-- Set 1 -->
+                            <div class="crop-badge"><i class="fa-solid fa-apple-whole"></i> Apple</div>
+                            <div class="crop-badge"><i class="fa-solid fa-leaf"></i> Cherry</div>
+                            <div class="crop-badge"><i class="fa-solid fa-seedling"></i> Corn</div>
+                            <div class="crop-badge"><i class="fa-solid fa-leaf"></i> Grape</div>
+                            <div class="crop-badge"><i class="fa-solid fa-apple-whole"></i> Peach</div>
+                            <div class="crop-badge"><i class="fa-solid fa-pepper-hot"></i> Pepper</div>
+                            <div class="crop-badge"><i class="fa-solid fa-seedling"></i> Potato</div>
+                            <div class="crop-badge"><i class="fa-solid fa-leaf"></i> Strawberry</div>
+                            <div class="crop-badge"><i class="fa-solid fa-apple-whole"></i> Tomato</div>
+                            <div class="crop-badge"><i class="fa-solid fa-bowl-rice"></i> Rice</div>
+                            <div class="crop-badge"><i class="fa-solid fa-wheat-awn"></i> Wheat</div>
+                            <div class="crop-badge"><i class="fa-solid fa-shirt"></i> Cotton</div>
+                            <!-- Set 2 -->
+                            <div class="crop-badge"><i class="fa-solid fa-apple-whole"></i> Apple</div>
+                            <div class="crop-badge"><i class="fa-solid fa-leaf"></i> Cherry</div>
+                            <div class="crop-badge"><i class="fa-solid fa-seedling"></i> Corn</div>
+                            <div class="crop-badge"><i class="fa-solid fa-leaf"></i> Grape</div>
+                            <div class="crop-badge"><i class="fa-solid fa-apple-whole"></i> Peach</div>
+                            <div class="crop-badge"><i class="fa-solid fa-pepper-hot"></i> Pepper</div>
+                            <div class="crop-badge"><i class="fa-solid fa-seedling"></i> Potato</div>
+                            <div class="crop-badge"><i class="fa-solid fa-leaf"></i> Strawberry</div>
+                            <div class="crop-badge"><i class="fa-solid fa-apple-whole"></i> Tomato</div>
+                            <div class="crop-badge"><i class="fa-solid fa-bowl-rice"></i> Rice</div>
+                            <div class="crop-badge"><i class="fa-solid fa-wheat-awn"></i> Wheat</div>
+                            <div class="crop-badge"><i class="fa-solid fa-shirt"></i> Cotton</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7 Days Weather Forecast -->
+                <div class="glass-card" style="padding: 2rem; display: flex; flex-direction: column;">
+                    <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-cloud-sun"></i> 7 Days Weather Forecast</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.95rem;">Get real-time local weather forecasts for optimal disease prevention planning.</p>
+                    <div id="weather-container" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <div class="loading-spinner" id="weatherLoadingSpinner" style="display: block; margin: 2rem auto;"></div>
+                        <div id="weather-cards" style="display: none; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 0.5rem; text-align: center;">
+                            <!-- Forecast cards injected here by JS -->
+                        </div>
+                        <p id="weatherError" style="display: none; color: #b91c1c; font-size: 0.9rem; text-align: center; padding: 1rem; background: #fee2e2; border-radius: 8px;">Could not load weather data.</p>
+                    </div>
+                </div>
+                
+                <!-- Interactive Geolocation Map -->
+                <div class="glass-card" id="map-card" style="padding: 2rem; display: flex; flex-direction: column; height: 100%;">
+                    <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-map-location-dot"></i> Geographical Context</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.95rem;">Tracking scanning perimeter and deducing regional agricultural soil models via AI.</p>
+                    <div id="locationMap" style="flex: 1; min-height: 200px; border-radius: 12px; z-index: 1;"></div>
+                    <p id="regionText" style="margin-top: 1rem; font-size: 0.9rem; font-weight: 600; text-align: center; color: var(--primary-green);"><i class="fa-solid fa-satellite-dish fa-fade"></i> Aligning GPS Coordinates...</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section id="tech">
+        <div class="container">
+            <h2>Technologies Used</h2>
+            <div class="tech-grid">
+                <div class="tech-card glass-card">
+                    <i class="fa-solid fa-network-wired tech-icon"></i>
+                    <h3>CNN Models</h3>
+                    <p>Custom Convolutional Architectures for precise feature mapping.</p>
+                </div>
+                <div class="tech-card glass-card">
+                    <i class="fa-solid fa-code-branch tech-icon"></i>
+                    <h3>TensorFlow & PyTorch</h3>
+                    <p>Industry-standard deep learning frameworks for training.</p>
+                </div>
+                <div class="tech-card glass-card">
+                    <i class="fa-solid fa-layer-group tech-icon"></i>
+                    <h3>SAM Segmentation</h3>
+                    <p>Segment Anything Model for robust leaf isolation.</p>
+                </div>
+                <div class="tech-card glass-card">
+                    <i class="fa-brands fa-python tech-icon"></i>
+                    <h3>Python backend</h3>
+                    <p>FastAPI/Flask API infrastructure integration.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Datasets & Features Combined -->
+    <section id="datasets-features" style="background: var(--pale-green);">
+        <div class="container">
+            <h2>Core Foundations</h2>
+            <div class="about-grid">
+                
+                <!-- Datasets -->
+                <div>
+                    <h3 style="margin-bottom: 2rem;">Trained Datasets</h3>
+                    <div class="tech-card glass-card" style="text-align: left; align-items: flex-start; margin-bottom: 1rem;">
+                        <h4 style="font-size: 1.1rem;"><i class="fa-solid fa-database" style="color:var(--primary-green)"></i> PlantVillage</h4>
+                        <p>Over 50,000 images covering 14 crops and 26 diseases.</p>
+                    </div>
+                    <div class="tech-card glass-card" style="text-align: left; align-items: flex-start; margin-bottom: 1rem;">
+                        <h4 style="font-size: 1.1rem;"><i class="fa-solid fa-images" style="color:var(--primary-green)"></i> PlantDoc</h4>
+                        <p>Images captured under varying real-world field conditions.</p>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div>
+                    <h3 style="margin-bottom: 2rem;">Key Features</h3>
+                    <div class="features-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="feature-box">
+                            <div class="feature-box-icon"><i class="fa-solid fa-bolt"></i></div>
+                            <div>
+                                <h4 style="margin-bottom: 0.25rem;">Real-time Prediction</h4>
+                                <p style="font-size: 0.9rem;">Optimized models for sub-second inference.</p>
+                            </div>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-box-icon"><i class="fa-solid fa-globe"></i></div>
+                            <div>
+                                <h4 style="margin-bottom: 0.25rem;">Plant-Agnostic System</h4>
+                                <p style="font-size: 0.9rem;">Analyzes various species generically before specific disease extraction.</p>
+                            </div>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-box-icon"><i class="fa-solid fa-check-double"></i></div>
+                            <div>
+                                <h4 style="margin-bottom: 0.25rem;">Confidence-Based Results</h4>
+                                <p style="font-size: 0.9rem;">Transparency in AI certainty with fallback manual review triggers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Showcase -->
+    <section id="results">
+        <div class="container">
+            <h2>Results Showcase</h2>
+            <div class="about-grid" style="gap: 2rem;">
+                <div class="glass-card" style="padding: 1rem; text-align: center;">
+                    <div style="background: #2d3436; height: 250px; border-radius: 16px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white;">
+                         <i class="fa-solid fa-leaf" style="font-size: 4rem; color: #b91c1c;"></i>
+                    </div>
+                    <h4>Early Blight</h4>
+                    <span style="color: var(--secondary-green); font-weight: bold;">Confidence: 91%</span>
+                </div>
+                <div class="glass-card" style="padding: 1rem; text-align: center;">
+                    <div style="background: #2d3436; height: 250px; border-radius: 16px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white;">
+                         <i class="fa-solid fa-leaf" style="font-size: 4rem; color: #15803d;"></i>
+                    </div>
+                    <h4>Healthy Apple Leaf</h4>
+                    <span style="color: var(--secondary-green); font-weight: bold;">Confidence: 98%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" style="background: var(--pale-green);">
+        <div class="container">
+            <h2>Development Team</h2>
+            <div class="tech-grid">
+                <div class="glass-card" style="text-align: center;">
+                    <div style="width: 100px; height: 100px; background: var(--secondary-green); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.5rem;">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h4>Swastik Sharma & Shivang Dubey</h4>
+                    <p style="font-size: 0.9rem; color: var(--primary-green);">AI Developer</p>
+                </div>
+                <div class="glass-card" style="text-align: center;">
+                    <div style="width: 100px; height: 100px; background: var(--secondary-green); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.5rem;">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h4>Guide Name</h4>
+                    <p style="font-size: 0.9rem; color: var(--primary-green);">Dr Abhishek</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--dark-green); color: var(--white); padding: 4rem 0 2rem; position: relative; z-index: 10;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 3rem;">
+                <div style="max-width: 300px;">
+                    <h3 style="color: var(--white); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-leaf"></i> FlorAI
+                    </h3>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">An intelligent system detecting plant diseases using deep learning and computer vision.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--white); margin-bottom: 1rem;">Technologies</h4>
+                    <ul style="list-style: none; color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 2;">
+                        <li>TensorFlow / PyTorch</li>
+                        <li>Python / FastAPI</li>
+                        <li>CNN Algorithms</li>
+                        <li>OpenCV</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--white); margin-bottom: 1rem;">Connect</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="https://github.com/Swastik-Sharma-web/AI-Powered-Plant-Disease-Detection-System.git" target="_blank" style="color: white; font-size: 1.5rem; transition: var(--transition);" onmouseover="this.style.color='var(--light-green)'" onmouseout="this.style.color='white'"><i class="fa-brands fa-github"></i></a>
+                        <a href="mailto:contact@example.com" style="color: white; font-size: 1.5rem; transition: var(--transition);" onmouseover="this.style.color='var(--light-green)'" onmouseout="this.style.color='white'"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 1rem;">Based in the community.</p>
+                </div>
+            </div>
+            <div style="text-align: center; color: rgba(255,255,255,0.5); font-size: 0.85rem;">
+                &copy; 2026 AI-Powered Plant Disease Detection System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="script.js"></script>
+</body>
+</html>

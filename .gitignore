@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+datasets/
+*.keras
+*.pt
+*.pth
+.env
